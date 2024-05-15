@@ -6,6 +6,8 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.Arrays;
 
 import static java.lang.Boolean.FALSE;
@@ -41,6 +43,32 @@ public class BaseQuestionDlg extends JFrame {
         setTitle("Base Question Properties");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMinimumSize(MIN_SIZE);
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentMoved(ComponentEvent e) {
+                super.componentMoved(e);
+                System.out.println(e.getComponent().getGraphicsConfiguration().getDevice().getIDstring());
+            }
+        });
+
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] devices = ge.getScreenDevices();
+
+
+        if (devices.length > 1) {
+            System.out.println("Multiple displays detected.");
+            System.out.println("Number of displays: " + devices.length);
+
+            Arrays.stream(devices).forEach(
+                    device-> {
+                        if(getRootPane().getGraphicsConfiguration().getDevice().equals(device))
+                            System.out.println(device.getIDstring());
+                    });
+
+        } else {
+            System.out.println("Single display detected.");
+        }
 
         //        setLayout(new BorderLayout());
 //        JScrollPane scroll = new JScrollPane();
